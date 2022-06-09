@@ -1,0 +1,42 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": [
+    ".env"
+  ],
+  "pipeline": {
+    "api#docker:up": {
+      "cache": false
+    },
+    "build": {
+      "outputs": [
+        "dist/**",
+        ".output/**",
+        "public/dist/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "dependsOn": []
+    },
+    "lint": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": []
+    },
+    "dev": {
+      "dependsOn": [
+        "api#docker:up"
+      ],
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

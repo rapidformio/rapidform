@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  auth:
+    container_name: rapidform-auth
+    image: supabase/gotrue:latest
+    depends_on:
+      - db
+    restart: unless-stopped
+    ports:
+      - 9999:9999
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}?search_path=auth
+
+      GOTRUE_SITE_URL: ${NUXT_PUBLIC_WEBAPP_URL}
+      GOTRUE_URI_ALLOW_LIST: ${ADDITIONAL_REDIRECT_URLS}
+      GOTRUE_DISABLE_SIGNUP: ${DISABLE_SIGNUP}
+      GOTRUE_COOKIE_KEY: ${GOTRUE_COOKIE_KEY}
+
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: ${JWT_EXPIRY}
+      GOTRUE_JWT_SECRET: ${ENCRYPTION_KEY}
+
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: ${ENABLE_EMAIL_SIGNUP}
+      GOTRUE_MAILER_AUTOCONFIRM: ${ENABLE_EMAIL_AUTOCONFIRM}
+      GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL}
+      GOTRUE_SMTP_HOST: ${SMTP_HOST}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT}
+      GOTRUE_SMTP_USER: ${SMTP_USER}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS}
+      GOTRUE_SMTP_SENDER_NAME: ${SMTP_SENDER_NAME}
+      GOTRUE_MAILER_URLPATHS_INVITE: /verify
+      GOTRUE_MAILER_URLPATHS_CONFIRMATION: /verify
+      GOTRUE_MAILER_URLPATHS_RECOVERY: /verify
+      GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /verify
+
+      GOTRUE_EXTERNAL_PHONE_ENABLED: ${ENABLE_PHONE_SIGNUP}
+      GOTRUE_SMS_AUTOCONFIRM: ${ENABLE_PHONE_AUTOCONFIRM}
+
+  db:
+    container_name: rapidform-db
+    image: postgres:latest
+    restart: unless-stopped
+    ports:
+      - ${PGPORT}:5432
+    environment:
+      POSTGRES_PASSWORD: ${PGPASSWORD}

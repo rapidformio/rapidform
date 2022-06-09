@@ -1,0 +1,45 @@
+name: Release Rapidform
+
+on:
+  push:
+    branches:
+      - "main"
+      - "alpha"
+      - "beta"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get version before
+        run: echo $(curl --silent https://api.github.com/repos/rapidformio/rapidform/releases/latest | jq .name --raw-output | cut -c 2-) > version-before
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: version-before
+          path: version-before
+
+      - name: Release on GitHub
+        run: |
+          npx semantic-release                        \
+            --ci                                      \
+            --plugins                                 \
+            @semantic-release/commit-analyzer         \
+            @semantic-release/release-notes-generator \
+            @semantic-release/github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get version after
+        run: echo $(curl --silent https://api.github.com/repos/rapidformio/rapidform/releases/latest | jq .name --raw-output | cut -c 2-) > version-after
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: version-after
+          path: version-after

@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "ESNext"],
+    "outDir": "./dist",
+    "declaration": true
+  },
+  "extends": "tsconfig/vue-library.json",
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"]
+}
