@@ -1,10 +1,5 @@
 <template>
-  <div>
-    <h1>Hi</h1>
-    <r-button />
-  </div>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
-
-<script lang="ts" setup>
-import { RButton } from "ui"
-</script>
