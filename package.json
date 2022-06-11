@@ -1,10 +1,13 @@
 {
+  "name": "rapidform",
+  "version": "0.0.0",
   "private": true,
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
   "scripts": {
+    "start:api": "node ./apps/api/dist/index.js",
     "build": "turbo run build",
     "dev": "turbo run dev --no-cache --parallel --continue",
     "lint": "turbo run lint",
